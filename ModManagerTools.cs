@@ -32,6 +32,7 @@ namespace ModManager
 
             foreach (String file in Directory.EnumerateFiles("mods"))
             {
+                if (!file.EndsWith(".dll")) continue;
                 Assembly ass = Assembly.LoadFrom(file);
                 MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
 
@@ -64,14 +65,18 @@ namespace ModManager
         public static void getOnlineModInformation()
         {
             String rawJson = Networking.Get("https://raw.githubusercontent.com/MDModsDev/ModLinks/main/ModLinks.json");
-            JObject modList = JsonUtils.Deserialize<JObject>(rawJson, (JsonSerializerSettings)null);
+            JArray modList = JsonUtils.Deserialize<JArray>(rawJson, (JsonSerializerSettings)null);
 
 
-
-            foreach (string modName in JsonUtils.Keys(modList))
+            for(int i = 0;i<modList.Count;i++)
+            
             {
+                JObject modEntry = modList[i].Cast<JObject>();
+                string modName = (string)modEntry["Name"];
+
+
                 MelonLoader.MelonLogger.Msg("Procession mod:" + modName);
-                JObject mod = modList[modName].Cast<JObject>();
+               
                 int j = 0;
                 for (; j < mods.Count; j++)
                 {
@@ -79,7 +84,7 @@ namespace ModManager
                     if (lMod.Name == modName)
                     {
 
-                        addOnlineModToLocalMod(mod, mods[j]);
+                        addOnlineModToLocalMod(modEntry, mods[j]);
                         break;
                     }
                 }
@@ -88,7 +93,7 @@ namespace ModManager
                 {
                     ModInfo modInfo = new ModInfo();
                     modInfo.Name = modName;
-                    addOnlineMod(mod, modInfo);
+                    addOnlineMod(modEntry, modInfo);
                 }
             }
 
@@ -101,7 +106,7 @@ namespace ModManager
         {
             modInfo.online = true;
             modInfo.onlineVersion = (string)mod["Version"];
-            modInfo.description =modInfo.description==""?"":(string)mod["Description"];
+            modInfo.description =  (string)mod["Description"];
             modInfo.hasUpdate = isVersionGreater(modInfo.onlineVersion, modInfo.Version);
             modInfo.downloadLink = "https://raw.githubusercontent.com/MDModsDev/ModLinks/main/" + (string)mod["DownloadLink"];
         }
@@ -115,61 +120,6 @@ namespace ModManager
             modInfo.downloadLink = "https://raw.githubusercontent.com/MDModsDev/ModLinks/main/" + (string)mod["DownloadLink"];
 
             mods.Add(modInfo);
-        }
-
-        public static void getOnlineModInformationMDMC()
-        {
-            //download 
-            System.Action<UnityWebRequest> callbacl = delegate (UnityWebRequest webRequest)
-            {
-                JArray val = JsonUtils.Deserialize<JArray>(webRequest.downloadHandler.GetText(), (JsonSerializerSettings)null);
-
-
-                for (int i = 0; i < val.Count; i++)
-                {
-                    JObject Omod = val[i].Cast<JObject>();
-
-                    ModInfo mod = new ModInfo();
-                    bool islocal = false;
-                    int index = 0;
-                    for (int j = 0; j < mods.Count; j++)
-                    {
-                        ModInfo lMod = mods[j];
-                        if (lMod.Name == (string)Omod["name"])
-                        {
-                            index = j;
-                            islocal = true;
-                            mod = lMod;
-                            break;
-                        }
-                    }
-
-
-                    mod.Name = (string)Omod["name"];
-                    mod.Author = (string)Omod["author"];
-
-                    mod.onlineVersion = (string)Omod["version"];
-                    mod.online = true;
-                    mod.downloadLink = "https://mdmc.moe/api/v5/download/mod/" + (int)Omod["id"];
-
-                    if (islocal)
-                    {
-                        mod.hasUpdate = isVersionGreater(mod.onlineVersion, mod.Version);
-                        mods[index] = mod;
-                    }
-                    else
-                    {
-                        mod.hasUpdate = true;
-                        mods.Add(mod);
-                    }
-                }
-
-                MelonLogger.Msg("GotOnlineMods");
-
-                ModsPnlManager.RefreshBoxes();
-            };
-            Networking.Get("https://mdmc.moe/api/v5/mods", callbacl);
-
         }
 
         public static T getComponentByName<T>(GameObject gm, string name)
@@ -297,5 +247,63 @@ namespace ModManager
             return String.Compare(y.Name, x.Name);
         }
     }
+
+/*
+        public static void getOnlineModInformationMDMC()
+        {
+            //download 
+            System.Action<UnityWebRequest> callbacl = delegate (UnityWebRequest webRequest)
+            {
+                JArray val = JsonUtils.Deserialize<JArray>(webRequest.downloadHandler.GetText(), (JsonSerializerSettings)null);
+
+
+                for (int i = 0; i < val.Count; i++)
+                {
+                    JObject Omod = val[i].Cast<JObject>();
+
+                    ModInfo mod = new ModInfo();
+                    bool islocal = false;
+                    int index = 0;
+                    for (int j = 0; j < mods.Count; j++)
+                    {
+                        ModInfo lMod = mods[j];
+                        if (lMod.Name == (string)Omod["name"])
+                        {
+                            index = j;
+                            islocal = true;
+                            mod = lMod;
+                            break;
+                        }
+                    }
+
+
+                    mod.Name = (string)Omod["name"];
+                    mod.Author = (string)Omod["author"];
+
+                    mod.onlineVersion = (string)Omod["version"];
+                    mod.online = true;
+                    mod.downloadLink = "https://mdmc.moe/api/v5/download/mod/" + (int)Omod["id"];
+
+                    if (islocal)
+                    {
+                        mod.hasUpdate = isVersionGreater(mod.onlineVersion, mod.Version);
+                        mods[index] = mod;
+                    }
+                    else
+                    {
+                        mod.hasUpdate = true;
+                        mods.Add(mod);
+                    }
+                }
+
+                MelonLogger.Msg("GotOnlineMods");
+
+                ModsPnlManager.RefreshBoxes();
+            };
+            Networking.Get("https://mdmc.moe/api/v5/mods", callbacl);
+
+        }
+*/
+
 
 }

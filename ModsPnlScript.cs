@@ -14,39 +14,46 @@ namespace ModManager
         public List<ModInfo> mods = new List<ModInfo>();
         public GameObject ModBoxAsset;
         public GameObject ContentPanel;
+        public Scrollbar verticalScrollbar;
         void Start()
         {
-            Button[] buttons = GetComponentsInChildren<Button>();
+            tabs = new List<GameObject>[] { ModBoxInstalled, ModBoxDisabled, ModBoxAvailable, ModBoxUpdate };
 
-            buttons[buttons.Length - 3].onClick.AddListener((System.Action)delegate { tab = 0; refreshUI(); });
-            buttons[buttons.Length - 2].onClick.AddListener((System.Action)delegate { tab = 1; refreshUI(); });
-            buttons[buttons.Length - 1].onClick.AddListener((System.Action)delegate { tab = 2; refreshUI(); });
+            verticalScrollbar = GetComponentInChildren<ScrollRect>().verticalScrollbar;
+            Button[] buttons = GetComponentsInChildren<Button>();
+            buttons[buttons.Length - 4].onClick.AddListener((System.Action)delegate { tab = 0; refreshUI(); });
+            buttons[buttons.Length - 3].onClick.AddListener((System.Action)delegate { tab = 1; refreshUI(); });
+            buttons[buttons.Length - 2].onClick.AddListener((System.Action)delegate { tab = 2; refreshUI(); });
+            buttons[buttons.Length - 1].onClick.AddListener((System.Action)delegate { tab = 3; refreshUI(); });
         }
 
-        public List<GameObject> ModBoxInstalled = new List<GameObject>();
-        public List<GameObject> ModBoxDisabled = new List<GameObject>();
-        public List<GameObject> ModBoxAvailable = new List<GameObject>();
+        private List<GameObject> ModBoxInstalled = new List<GameObject>();
+        private List<GameObject> ModBoxDisabled = new List<GameObject>();
+        private List<GameObject> ModBoxAvailable = new List<GameObject>();
+        private List<GameObject> ModBoxUpdate = new List<GameObject>();
+
+        public List<GameObject>[] tabs = new List<GameObject>[0];
 
         public int tab = 0;
 
         public void refreshUI()
         {
+            if (!gameObject.active) return;
 
-            MelonLoader.MelonLogger.Msg(tab);
+            for(int tabIndex = 0;tabIndex<tabs.Length;tabIndex++)
+            {
+                foreach (GameObject modBox in tabs[tabIndex])
+                {
+                   
+                    modBox.SetActive(tab == tabIndex);
+                  if(modBox.active) modBox.GetComponent<ModBoxScript>().updateUI();
+                }
+            }
 
-            foreach (GameObject modBox in ModBoxInstalled)
-            {
-                modBox.SetActive(tab == 0);
-            }
-            foreach (GameObject modBox in ModBoxDisabled)
-            {
-                modBox.SetActive(tab == 1);
-            }
+           
+            verticalScrollbar.value = 1;
+            
 
-            foreach (GameObject modBox in ModBoxAvailable)
-            {
-                modBox.SetActive(tab == 2);
-            }
         }
 
         public void refresh()
@@ -58,6 +65,7 @@ namespace ModManager
             ModBoxInstalled.Clear();
             ModBoxDisabled.Clear();
             ModBoxAvailable.Clear();
+            ModBoxUpdate.Clear();
 
             foreach (ModInfo mod in mods)
             {
@@ -69,6 +77,11 @@ namespace ModManager
 
                 if (mod.local)
                 {
+                    if (mod.hasUpdate)
+                    {
+                        modBoxScript.tab = 3;
+                        ModBoxUpdate.Add(modBox);
+                    }
                     if (mod.enabled)
                     {
                         modBoxScript.tab = 0;
@@ -86,9 +99,6 @@ namespace ModManager
                     modBoxScript.tab = 2;
                     ModBoxAvailable.Add(modBox);
                 }
-
-
-
             }
 
             refreshUI();

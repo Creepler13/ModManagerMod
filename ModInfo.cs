@@ -16,7 +16,6 @@ namespace ModManager
             this.Author = mod.Author;
             this.Name = mod.Name;
             this.Version = mod.Version;
-
             this.fileName = fileName;
         }
 
@@ -60,16 +59,13 @@ namespace ModManager
 
         public void update()
         {
-            //    WebClient client = new WebClient();
-            //    client.DownloadFile(downloadLink, ((enabled) ? "mods" : "disabledMods") + "/" + Name + ".dll");
-            Networking.DownloadFile(downloadLink, ((enabled) ? "mods" : "disabledMods") + "/" + Name + ".dll");
+             Networking.DownloadFile(downloadLink, ((enabled) ? "mods" : "disabledMods") + "/" + Name + ".dll");
             MelonLogger.Msg("Updated " + Name + " " + Version + " -> " + onlineVersion);
         }
 
 
         public void disable()
         {
-
             if (!enabled) return;
 
             if (File.Exists("mods/" + fileName))
@@ -85,7 +81,7 @@ namespace ModManager
             if (File.Exists("disabledMods/" + fileName))
             {
                 File.Move("disabledMods/" + fileName, "mods/" + fileName);
-                enabled = false;
+                enabled = true;
             }
         }
 

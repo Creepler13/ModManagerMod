@@ -105,22 +105,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileWriter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Networking.cs" />
     <Compile Include="ModsPnlManager.cs" />
     <Compile Include="ModInfo.cs" />
     <Compile Include="ModManagerTools.cs" />
-    <Compile Include="MyMod.cs" />
+    <Compile Include="ModManager.cs" />
     <Compile Include="Awake_Patch.cs" />
     <Compile Include="ModBoxScript.cs" />
     <Compile Include="ModsPnlScript.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Prefabs\defaultStyle" />
+    <EmbeddedResource Include="ModManagerAutUpdatePlugin.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ModManagerAutUpdatePlugin.dll" />
+    <EmbeddedResource Include="defaultstyle" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

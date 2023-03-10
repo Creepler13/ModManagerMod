@@ -14,6 +14,7 @@ namespace ModManager
     internal class Networking
     {
 
+     
         public static string Get(string URL)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
@@ -54,7 +55,7 @@ namespace ModManager
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
-            FileStream s = new FileStream(path + ".part", FileMode.Create, FileAccess.Write);
+       //     FileStream s = new FileStream(path + ".part", FileMode.Create, FileAccess.Write);
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream stream = response.GetResponseStream();
             /*
@@ -66,9 +67,9 @@ namespace ModManager
                 }
             s.Close();
             */
-            File.GetAccessControl(path);
-            File.WriteAllText(path, new StreamReader(stream).ReadToEnd());
-
+            // File.GetAccessControl(path);
+            // File.WriteAllText(path, new StreamReader(stream).ReadToEnd());
+            FileWriter.writeFile(path, new StreamReader(stream).ReadToEnd());
         }
 
     }

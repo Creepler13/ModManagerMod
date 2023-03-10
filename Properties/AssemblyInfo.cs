@@ -16,9 +16,9 @@ using ModManager;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion(MyMod.Version)]
-[assembly: AssemblyFileVersion(MyMod.Version)]
-[assembly: MelonInfo(typeof(MyMod), MyMod.Name, MyMod.Version, MyMod.Author, null)]
+[assembly: AssemblyVersion(ModManager.ModManager.Version)]
+[assembly: AssemblyFileVersion(ModManager.ModManager.Version)]
+[assembly: MelonInfo(typeof(ModManager.ModManager), ModManager.ModManager.Name, ModManager.ModManager.Version, ModManager.ModManager.Author, null)]
 [assembly: MelonGame("PeroPeroGames", "MuseDash")]
 
 

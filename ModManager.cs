@@ -6,26 +6,42 @@ using static UnhollowerRuntimeLib.ClassInjector;
 
 namespace ModManager
 {
-    public class MyMod : MelonMod
+    public class ModManager : MelonMod
     {
-
+        public static GameObject ModPnlAsset;
+        public static GameObject ModBoxAsset;
         public override void OnInitializeMelon()
         {
-            MelonLoader.MelonLogger.Msg(typeof(ModsPnlScript));
             RegisterTypeInIl2Cpp<ModsPnlScript>();
             RegisterTypeInIl2Cpp<ModBoxScript>();
+
+            Settings.load();
+
         }
 
+        public override void OnApplicationLateStart()
+        {
+         
+        }
+
+        public override void OnFixedUpdate()
+        {
+            FileWriter.WriteAll();
+
+
+        }
 
         public override void OnApplicationStart()
         {
-            Settings.load();
+
+        
+
             //installPlugin();
 
-            if (!Directory.Exists("Userdata/ModManager/styles"))
-                Directory.CreateDirectory("Userdata/ModManager/styles");
+            //  if (!Directory.Exists("Userdata/ModManager/styles"))
+            //     Directory.CreateDirectory("Userdata/ModManager/styles");
 
-            File.WriteAllBytes("Userdata/ModManager/styles/defaultStyle", ModManagerTools.ReadResource("ModManager.Prefabs.defaultStyle"));
+            //   File.WriteAllBytes("Userdata/ModManager/styles/defaultStyle", );
 
 
             //    ModManagerTools.getModLocalInformations();

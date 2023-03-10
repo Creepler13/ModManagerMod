@@ -73,11 +73,37 @@ namespace ModManager
                     buttons[2].GetComponentInChildren<Text>().text = "Install";
                     buttons[2].onClick.AddListener((System.Action)delegate { modInfo.download(); modsPnl.refresh(); });
                     break;
+                case 3:
+
+                    buttons[1].GetComponentInChildren<Text>().text = "Update to " + modInfo.onlineVersion;
+                    buttons[1].onClick.AddListener((System.Action)delegate { modInfo.update(); modsPnl.refresh(); });
+                    buttons[0].gameObject.SetActive(false);
+                    buttons[2].onClick.AddListener((System.Action)delegate { modInfo.delete(); modsPnl.refresh(); });
+                    break;
             }
 
 
         }
 
+
+        public void updateUI()
+        {
+            float maxH = 0;
+            RectTransform baseRect = GetComponent<RectTransform>();
+
+
+
+            foreach (RectTransform rect in GetComponentsInChildren<RectTransform>())
+            {
+                float newH = rect.rect.height + rect.rect.y - baseRect.rect.y;
+                if (newH > maxH)
+                    maxH = newH;
+
+            }
+
+            baseRect.sizeDelta=new Vector2 (baseRect.rect.width, maxH);
+
+        }
 
 
         // Update is called once per frame

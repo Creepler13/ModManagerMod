@@ -110,9 +110,6 @@ namespace ModManager
             iBtn.GetComponent<Button>().onClick.AddListener(action);
 
             ModManagerTools.getComponentByName(modbox, "StatusText").GetComponent<Text>().text = "Available";
-
-
-
             ModManagerTools.getComponentByName(modbox, "ModVersion").gameObject.SetActive(false);
             ModManagerTools.getComponentByName(modbox, "DisableButton").gameObject.SetActive(false);
             ModManagerTools.getComponentByName(modbox, "UninstallButton").gameObject.SetActive(false);
@@ -129,6 +126,8 @@ namespace ModManager
             modsPnlScript.mods = ModManagerTools.mods;
             modsPnlScript.refresh();
         }
+
+
             public static void RefreshBoxesTemp()
         {
 
