@@ -52,24 +52,21 @@ namespace ModManager
 
         public static void DownloadFile(string URL, string path)
         {
+            WebClient we = new WebClient();
+           byte[] bytes= we.DownloadData(URL);
+       /*     
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
        //     FileStream s = new FileStream(path + ".part", FileMode.Create, FileAccess.Write);
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream stream = response.GetResponseStream();
-            /*
-                int d = 0;
-
-                while ((d=stream.ReadByte())!=-1)
-                {
-                    s.WriteByte(((byte)d));
-                }
-            s.Close();
-            */
-            // File.GetAccessControl(path);
-            // File.WriteAllText(path, new StreamReader(stream).ReadToEnd());
-            FileWriter.writeFile(path, new StreamReader(stream).ReadToEnd());
+          
+            byte[] bytes = new byte[stream.Length];
+            stream.Read(bytes,0,bytes.Length);
+         */
+            FileWriter.writeFile(path, bytes);
+            
         }
 
     }

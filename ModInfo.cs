@@ -54,12 +54,12 @@ namespace ModManager
 
         public void delete()
         {
-            File.Delete(((enabled) ? "mods" : "disabledMods") + "/" + fileName);
+            FileWriter.deleteFile(((enabled) ? "mods" : "disabledMods") + "/" + fileName);
         }
 
         public void update()
         {
-             Networking.DownloadFile(downloadLink, ((enabled) ? "mods" : "disabledMods") + "/" + Name + ".dll");
+            Networking.DownloadFile(downloadLink, ((enabled) ? "mods" : "disabledMods") + "/" + Name + ".dll");
             MelonLogger.Msg("Updated " + Name + " " + Version + " -> " + onlineVersion);
         }
 

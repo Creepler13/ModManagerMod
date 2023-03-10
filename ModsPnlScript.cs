@@ -99,6 +99,9 @@ namespace ModManager
                     modBoxScript.tab = 2;
                     ModBoxAvailable.Add(modBox);
                 }
+
+                if (modBoxScript.tab != tab) modBox.SetActive(false);
+
             }
 
             refreshUI();

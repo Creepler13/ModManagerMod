@@ -32,26 +32,39 @@ namespace ModManager
 
             foreach (String file in Directory.EnumerateFiles("mods"))
             {
-                if (!file.EndsWith(".dll")) continue;
-                Assembly ass = Assembly.LoadFrom(file);
-                MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
+                try
+                {
+                    if (!file.EndsWith(".dll")) continue;
+                    Assembly ass = Assembly.LoadFrom(file);
+                    MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
 
-                ModInfo mod = new ModInfo(info, Path.GetFileName(file));
-                mod.enabled = true;
-                mod.local = true;
-                mods.Add(mod);
+                    ModInfo mod = new ModInfo(info, Path.GetFileName(file));
+                    mod.enabled = true;
+                    mod.local = true;
+                    mods.Add(mod);
+                }
+                catch {
+                    MelonLoader.MelonLogger.Msg("Unable to load "+ file);
+                
+                }
             }
 
             if (Directory.Exists("disabledMods"))
                 foreach (String file in Directory.EnumerateFiles("disabledMods"))
                 {
-                    MelonLogger.Msg(file);
-                    Assembly ass = Assembly.LoadFrom(musedashFolder + "/" + file);
-                    MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
-                    ModInfo mod = new ModInfo(info, Path.GetFileName(file));
-                    mod.enabled = false;
-                    mod.local = true;
-                    mods.Add(mod);
+                    try
+                    {
+                        MelonLogger.Msg(file);
+                        Assembly ass = Assembly.LoadFrom(musedashFolder + "/" + file);
+                        MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
+                        ModInfo mod = new ModInfo(info, Path.GetFileName(file));
+                        mod.enabled = false;
+                        mod.local = true;
+                        mods.Add(mod);
+                    }
+                    catch {
+                        MelonLoader.MelonLogger.Msg("Unable to load " + file);
+                    }
                 }
             else
                 Directory.CreateDirectory("disabledMods");
@@ -68,15 +81,15 @@ namespace ModManager
             JArray modList = JsonUtils.Deserialize<JArray>(rawJson, (JsonSerializerSettings)null);
 
 
-            for(int i = 0;i<modList.Count;i++)
-            
+            for (int i = 0; i < modList.Count; i++)
+
             {
                 JObject modEntry = modList[i].Cast<JObject>();
                 string modName = (string)modEntry["Name"];
 
 
-                MelonLoader.MelonLogger.Msg("Procession mod:" + modName);
-               
+               // MelonLoader.MelonLogger.Msg("Procession mod:" + modName);
+
                 int j = 0;
                 for (; j < mods.Count; j++)
                 {
@@ -106,7 +119,7 @@ namespace ModManager
         {
             modInfo.online = true;
             modInfo.onlineVersion = (string)mod["Version"];
-            modInfo.description =  (string)mod["Description"];
+            modInfo.description = (string)mod["Description"];
             modInfo.hasUpdate = isVersionGreater(modInfo.onlineVersion, modInfo.Version);
             modInfo.downloadLink = "https://raw.githubusercontent.com/MDModsDev/ModLinks/main/" + (string)mod["DownloadLink"];
         }
@@ -173,27 +186,30 @@ namespace ModManager
             resourcePath = assembly.GetManifestResourceNames()
                 .Single(str => str.EndsWith(name));
 
+            MelonLoader.MelonLogger.Msg(resourcePath);
 
             Stream s = assembly.GetManifestResourceStream(resourcePath);
+            MelonLoader.MelonLogger.Msg(resourcePath);
+
+            byte[] bytes = new byte[s.Length];
+            s.Read(bytes, 0, bytes.Length);
+
+
+            /*
+              int numBytesToRead = (int)s.Length;
+              int numBytesRead = 0;
+              do
+              {
+                  // Read may return anything from 0 to 10.
+                  int n = s.Read(bytes, numBytesRead, 10);
+                  numBytesRead += n;
+                  numBytesToRead -= n;
+              } while (numBytesToRead > 0);
+              s.Close();
 
 
 
-
-            byte[] bytes = new byte[s.Length + 10];
-            int numBytesToRead = (int)s.Length;
-            int numBytesRead = 0;
-            do
-            {
-                // Read may return anything from 0 to 10.
-                int n = s.Read(bytes, numBytesRead, 10);
-                numBytesRead += n;
-                numBytesToRead -= n;
-            } while (numBytesToRead > 0);
-            s.Close();
-
-
-
-
+              */
 
 
 
@@ -248,62 +264,62 @@ namespace ModManager
         }
     }
 
-/*
-        public static void getOnlineModInformationMDMC()
-        {
-            //download 
-            System.Action<UnityWebRequest> callbacl = delegate (UnityWebRequest webRequest)
+    /*
+            public static void getOnlineModInformationMDMC()
             {
-                JArray val = JsonUtils.Deserialize<JArray>(webRequest.downloadHandler.GetText(), (JsonSerializerSettings)null);
-
-
-                for (int i = 0; i < val.Count; i++)
+                //download 
+                System.Action<UnityWebRequest> callbacl = delegate (UnityWebRequest webRequest)
                 {
-                    JObject Omod = val[i].Cast<JObject>();
+                    JArray val = JsonUtils.Deserialize<JArray>(webRequest.downloadHandler.GetText(), (JsonSerializerSettings)null);
 
-                    ModInfo mod = new ModInfo();
-                    bool islocal = false;
-                    int index = 0;
-                    for (int j = 0; j < mods.Count; j++)
+
+                    for (int i = 0; i < val.Count; i++)
                     {
-                        ModInfo lMod = mods[j];
-                        if (lMod.Name == (string)Omod["name"])
+                        JObject Omod = val[i].Cast<JObject>();
+
+                        ModInfo mod = new ModInfo();
+                        bool islocal = false;
+                        int index = 0;
+                        for (int j = 0; j < mods.Count; j++)
                         {
-                            index = j;
-                            islocal = true;
-                            mod = lMod;
-                            break;
+                            ModInfo lMod = mods[j];
+                            if (lMod.Name == (string)Omod["name"])
+                            {
+                                index = j;
+                                islocal = true;
+                                mod = lMod;
+                                break;
+                            }
+                        }
+
+
+                        mod.Name = (string)Omod["name"];
+                        mod.Author = (string)Omod["author"];
+
+                        mod.onlineVersion = (string)Omod["version"];
+                        mod.online = true;
+                        mod.downloadLink = "https://mdmc.moe/api/v5/download/mod/" + (int)Omod["id"];
+
+                        if (islocal)
+                        {
+                            mod.hasUpdate = isVersionGreater(mod.onlineVersion, mod.Version);
+                            mods[index] = mod;
+                        }
+                        else
+                        {
+                            mod.hasUpdate = true;
+                            mods.Add(mod);
                         }
                     }
 
+                    MelonLogger.Msg("GotOnlineMods");
 
-                    mod.Name = (string)Omod["name"];
-                    mod.Author = (string)Omod["author"];
+                    ModsPnlManager.RefreshBoxes();
+                };
+                Networking.Get("https://mdmc.moe/api/v5/mods", callbacl);
 
-                    mod.onlineVersion = (string)Omod["version"];
-                    mod.online = true;
-                    mod.downloadLink = "https://mdmc.moe/api/v5/download/mod/" + (int)Omod["id"];
-
-                    if (islocal)
-                    {
-                        mod.hasUpdate = isVersionGreater(mod.onlineVersion, mod.Version);
-                        mods[index] = mod;
-                    }
-                    else
-                    {
-                        mod.hasUpdate = true;
-                        mods.Add(mod);
-                    }
-                }
-
-                MelonLogger.Msg("GotOnlineMods");
-
-                ModsPnlManager.RefreshBoxes();
-            };
-            Networking.Get("https://mdmc.moe/api/v5/mods", callbacl);
-
-        }
-*/
+            }
+    */
 
 
 }
