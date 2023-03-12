@@ -10,19 +10,22 @@ namespace ModManager
     {
         public static GameObject ModPnlAsset;
         public static GameObject ModBoxAsset;
+
+        public static string modsPath = "mods/", disabledModsPath = "UserData/ModManager/disabledMods/";
+
+
         public override void OnInitializeMelon()
         {
             RegisterTypeInIl2Cpp<ModsPnlScript>();
             RegisterTypeInIl2Cpp<ModBoxScript>();
 
             Settings.load();
-
+            FileWriter.deleteFiles();
         }
 
-        public override void OnApplicationLateStart()
-        {
-         
-        }
+
+    
+       
 
         public override void OnFixedUpdate()
         {
@@ -31,32 +34,19 @@ namespace ModManager
 
         }
 
-        public override void OnApplicationStart()
-        {
-
-        
-
-            //installPlugin();
-
-            //  if (!Directory.Exists("Userdata/ModManager/styles"))
-            //     Directory.CreateDirectory("Userdata/ModManager/styles");
-
-            //   File.WriteAllBytes("Userdata/ModManager/styles/defaultStyle", );
-
-
-            //    ModManagerTools.getModLocalInformations();
-
-
-
-        }
-
+     
         public void installPlugin()
         {
+
+            File.Move("plugins/ModManagerAutUpdatePlugin.dll", "Userdata/ModManager/toDelete/ModManagerAutUpdatePlugin.dll");
             File.WriteAllBytes("plugins/ModManagerAutUpdatePlugin.dll", ModManagerTools.ReadResource("ModManager.ModManagerAutUpdatePlugin.dll"));
 
         }
 
-
+        public override void OnDeinitializeMelon()
+        {
+            base.OnDeinitializeMelon();
+        }
 
 
         public const string Name = "ModManager";

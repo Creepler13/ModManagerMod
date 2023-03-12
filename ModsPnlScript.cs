@@ -13,10 +13,19 @@ namespace ModManager
 
         public List<ModInfo> mods = new List<ModInfo>();
         public GameObject ModBoxAsset;
+        public Toggle ModsToggle;
+
+        public Sprite melonSprite;
+
         public GameObject ContentPanel;
         public Scrollbar verticalScrollbar;
         void Start()
         {
+            Awake_Patch.Modspnlscript.ModsToggle.transform.GetChild(0).FindChild("TxtAchv").gameObject.GetComponent<Text>().text = "Mods";
+
+
+
+
             tabs = new List<GameObject>[] { ModBoxInstalled, ModBoxDisabled, ModBoxAvailable, ModBoxUpdate };
 
             verticalScrollbar = GetComponentInChildren<ScrollRect>().verticalScrollbar;
@@ -40,19 +49,19 @@ namespace ModManager
         {
             if (!gameObject.active) return;
 
-            for(int tabIndex = 0;tabIndex<tabs.Length;tabIndex++)
+            for (int tabIndex = 0; tabIndex < tabs.Length; tabIndex++)
             {
                 foreach (GameObject modBox in tabs[tabIndex])
                 {
-                   
+
                     modBox.SetActive(tab == tabIndex);
-                  if(modBox.active) modBox.GetComponent<ModBoxScript>().updateUI();
+                    if (modBox.active) modBox.GetComponent<ModBoxScript>().updateUI();
                 }
             }
 
-           
+
             verticalScrollbar.value = 1;
-            
+
 
         }
 

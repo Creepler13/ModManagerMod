@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.AccessControl;
+using System;
 
 namespace ModManager
 {
@@ -32,21 +34,30 @@ namespace ModManager
         {
             if (bufferedFileWrite.Count > 0 || bufferedFileWriteByte.Count > 0 || toDelete.Count > 0)
             {
-                foreach (string path in bufferedFileWrite.Keys)
+                try
                 {
-                    File.WriteAllText(path, bufferedFileWrite[path]);
-                }
 
-                foreach (string path in bufferedFileWriteByte.Keys)
+                    foreach (string path in bufferedFileWrite.Keys)
+                    {
+                        moveToDelete(path);
+                        File.WriteAllText(path, bufferedFileWrite[path]);
+                    }
+
+                    foreach (string path in bufferedFileWriteByte.Keys)
+                    {
+                        moveToDelete(path);
+                        File.WriteAllBytes(path, bufferedFileWriteByte[path]);
+                    }
+
+                    foreach (string path in toDelete)
+                    {
+                        moveToDelete(path);
+                    }
+                }
+                catch (Exception e)
                 {
-                    File.WriteAllBytes(path, bufferedFileWriteByte[path]);
+                    MelonLoader.MelonLogger.Error(e);
                 }
-
-                foreach (string path in toDelete)
-                {
-                    File.Delete(path);
-                }
-
                 bufferedFileWrite.Clear();
                 bufferedFileWriteByte.Clear();
                 toDelete.Clear();
@@ -54,6 +65,34 @@ namespace ModManager
             }
 
 
+        }
+
+        public static void deleteFiles()
+        {
+            Directory.CreateDirectory("Userdata/ModManager/toDelete");
+            foreach (string file in Directory.EnumerateFiles("Userdata/ModManager/toDelete"))
+            {
+                File.Delete(file);
+            }
+        }
+
+        private static void moveToDelete(string path)
+        {
+            if (File.Exists(path))
+                File.Move(path, "Userdata/ModManager/toDelete/" + path.Split("/".ToCharArray()).Last());
+        }
+
+
+
+        public static void moveToEnabled(string fileName)
+        {
+            if (File.Exists(ModManager.disabledModsPath + fileName))
+                File.Move(ModManager.disabledModsPath + fileName, ModManager.modsPath + fileName);
+        }
+        public static void moveToDisabled(string fileName)
+        {
+            if (File.Exists(ModManager.modsPath + fileName))
+                File.Move(ModManager.modsPath + fileName, ModManager.disabledModsPath + fileName);
         }
 
     }

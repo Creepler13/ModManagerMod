@@ -30,7 +30,7 @@ namespace ModManager
 
             string musedashFolder = Directory.GetCurrentDirectory();
 
-            foreach (String file in Directory.EnumerateFiles("mods"))
+            foreach (String file in Directory.EnumerateFiles(ModManager.modsPath))
             {
                 try
                 {
@@ -43,31 +43,37 @@ namespace ModManager
                     mod.local = true;
                     mods.Add(mod);
                 }
-                catch {
-                    MelonLoader.MelonLogger.Msg("Unable to load "+ file);
-                
+                catch
+                {
+                    MelonLoader.MelonLogger.Msg("Unable to load " + file);
+
                 }
             }
 
-            if (Directory.Exists("disabledMods"))
-                foreach (String file in Directory.EnumerateFiles("disabledMods"))
+            if (Directory.Exists(ModManager.disabledModsPath))
+                foreach (String file in Directory.EnumerateFiles(ModManager.disabledModsPath))
                 {
                     try
                     {
-                        MelonLogger.Msg(file);
+                        if (!file.EndsWith(".dll")) continue;
+
                         Assembly ass = Assembly.LoadFrom(musedashFolder + "/" + file);
+
+
                         MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
+                        MelonLogger.Msg(info.Name + " " + info.Version + " Disabled");
                         ModInfo mod = new ModInfo(info, Path.GetFileName(file));
                         mod.enabled = false;
                         mod.local = true;
                         mods.Add(mod);
                     }
-                    catch {
+                    catch
+                    {
                         MelonLoader.MelonLogger.Msg("Unable to load " + file);
                     }
                 }
             else
-                Directory.CreateDirectory("disabledMods");
+                Directory.CreateDirectory(ModManager.disabledModsPath);
 
             ModsPnlManager.RefreshBoxes();
             getOnlineModInformation();
@@ -88,7 +94,7 @@ namespace ModManager
                 string modName = (string)modEntry["Name"];
 
 
-               // MelonLoader.MelonLogger.Msg("Procession mod:" + modName);
+                // MelonLoader.MelonLogger.Msg("Procession mod:" + modName);
 
                 int j = 0;
                 for (; j < mods.Count; j++)
@@ -186,43 +192,34 @@ namespace ModManager
             resourcePath = assembly.GetManifestResourceNames()
                 .Single(str => str.EndsWith(name));
 
-            MelonLoader.MelonLogger.Msg(resourcePath);
 
             Stream s = assembly.GetManifestResourceStream(resourcePath);
-            MelonLoader.MelonLogger.Msg(resourcePath);
 
             byte[] bytes = new byte[s.Length];
             s.Read(bytes, 0, bytes.Length);
 
 
-            /*
-              int numBytesToRead = (int)s.Length;
-              int numBytesRead = 0;
-              do
-              {
-                  // Read may return anything from 0 to 10.
-                  int n = s.Read(bytes, numBytesRead, 10);
-                  numBytesRead += n;
-                  numBytesToRead -= n;
-              } while (numBytesToRead > 0);
-              s.Close();
-
-
-
-              */
-
-
-
-            // string s2 = System.Text.UTF32Encoding.Default.GetString(bytes);
-
-            //            MelonLoader.MelonLogger.Msg(s2);
-
-            //            MelonLoader.MelonLogger.Msg(bytes[bytes.Length - 1]);
-
-            //MelonLoader.MelonLogger.Msg(bytes[bytes.Length - 2]);
 
 
             return bytes;
+
+        }
+
+        public static Stream ReadResourceStream(string name)
+        {
+            // Determine path
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourcePath = name;
+            // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
+
+            resourcePath = assembly.GetManifestResourceNames()
+                .Single(str => str.EndsWith(name));
+
+
+            Stream s = assembly.GetManifestResourceStream(resourcePath);
+
+
+            return s;
 
         }
 

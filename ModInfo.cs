@@ -48,41 +48,36 @@ namespace ModManager
         public void download()
         {
 
-            Networking.DownloadFile(downloadLink, "mods/" + Name + ".dll");
+            Networking.DownloadFile(downloadLink, ModManager.modsPath + Name + ".dll");
             MelonLogger.Msg("Installed " + Name + " v" + onlineVersion);
-        }
-
-        public void delete()
-        {
-            FileWriter.deleteFile(((enabled) ? "mods" : "disabledMods") + "/" + fileName);
         }
 
         public void update()
         {
-            Networking.DownloadFile(downloadLink, ((enabled) ? "mods" : "disabledMods") + "/" + Name + ".dll");
+            Networking.DownloadFile(downloadLink, ((enabled) ? ModManager.modsPath : ModManager.disabledModsPath) + fileName);
             MelonLogger.Msg("Updated " + Name + " " + Version + " -> " + onlineVersion);
         }
+
+        public void delete()
+        {
+            FileWriter.deleteFile(((enabled) ? ModManager.modsPath : ModManager.disabledModsPath) + fileName);
+        }
+
+
 
 
         public void disable()
         {
             if (!enabled) return;
-
-            if (File.Exists("mods/" + fileName))
-            {
-                File.Move("mods/" + fileName, "disabledMods/" + fileName);
-                enabled = false;
-            }
+            FileWriter.moveToDisabled(fileName);
+            enabled = false;
         }
 
         public void enable()
         {
             if (enabled) return;
-            if (File.Exists("disabledMods/" + fileName))
-            {
-                File.Move("disabledMods/" + fileName, "mods/" + fileName);
-                enabled = true;
-            }
+            FileWriter.moveToEnabled(fileName);
+            enabled = true;
         }
 
     }

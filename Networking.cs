@@ -53,18 +53,7 @@ namespace ModManager
         public static void DownloadFile(string URL, string path)
         {
             WebClient we = new WebClient();
-           byte[] bytes= we.DownloadData(URL);
-       /*     
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-
-       //     FileStream s = new FileStream(path + ".part", FileMode.Create, FileAccess.Write);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            Stream stream = response.GetResponseStream();
-          
-            byte[] bytes = new byte[stream.Length];
-            stream.Read(bytes,0,bytes.Length);
-         */
+            byte[] bytes= we.DownloadData(URL);
             FileWriter.writeFile(path, bytes);
             
         }
