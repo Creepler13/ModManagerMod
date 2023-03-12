@@ -59,6 +59,7 @@
     <Reference Include="Sirenix.Serialization, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Json">
       <HintPath>..\..\..\Steam\steamapps\common\Muse Dash\MelonLoader\Managed\System.Json.dll</HintPath>
     </Reference>
@@ -105,23 +106,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="FileWriter.cs" />
+    <Compile Include="Patches\Awake_Patch - Copy.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Networking.cs" />
     <Compile Include="ModsPnlManager.cs" />
     <Compile Include="ModInfo.cs" />
     <Compile Include="ModManagerTools.cs" />
     <Compile Include="ModManager.cs" />
-    <Compile Include="Awake_Patch.cs" />
+    <Compile Include="Patches\Awake_Patch.cs" />
     <Compile Include="ModBoxScript.cs" />
     <Compile Include="ModsPnlScript.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ModManagerAutUpdatePlugin.dll" />
+    <EmbeddedResource Include="defaultstyle" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="defaultstyle" />
+    <EmbeddedResource Include="melon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
