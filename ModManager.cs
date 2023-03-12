@@ -23,31 +23,10 @@ namespace ModManager
             FileWriter.deleteFiles();
         }
 
-
-    
-       
-
         public override void OnFixedUpdate()
         {
             FileWriter.WriteAll();
-
-
         }
-
-     
-        public void installPlugin()
-        {
-
-            File.Move("plugins/ModManagerAutUpdatePlugin.dll", "Userdata/ModManager/toDelete/ModManagerAutUpdatePlugin.dll");
-            File.WriteAllBytes("plugins/ModManagerAutUpdatePlugin.dll", ModManagerTools.ReadResource("ModManager.ModManagerAutUpdatePlugin.dll"));
-
-        }
-
-        public override void OnDeinitializeMelon()
-        {
-            base.OnDeinitializeMelon();
-        }
-
 
         public const string Name = "ModManager";
         public const string Description = "ModManager";

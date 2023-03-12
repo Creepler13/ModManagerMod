@@ -20,6 +20,7 @@ using ModManager;
 [assembly: AssemblyFileVersion(ModManager.ModManager.Version)]
 [assembly: MelonInfo(typeof(ModManager.ModManager), ModManager.ModManager.Name, ModManager.ModManager.Version, ModManager.ModManager.Author, null)]
 [assembly: MelonGame("PeroPeroGames", "MuseDash")]
+[assembly: MelonColor(System.ConsoleColor.Blue),MelonAuthorColor(System.ConsoleColor.White)]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
