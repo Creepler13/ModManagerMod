@@ -29,6 +29,7 @@ namespace ModManager
             this.fileName = fileName;
         }
 
+        public string githubURL;
         public string fileName;
         public string Name;
         // public string Description;

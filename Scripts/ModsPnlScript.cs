@@ -26,16 +26,18 @@ namespace ModManager
 
 
 
-            tabs = new List<GameObject>[] { ModBoxInstalled, ModBoxDisabled, ModBoxAvailable, ModBoxUpdate };
+            tabs = new List<GameObject>[] { ModBoxAll, ModBoxInstalled, ModBoxDisabled, ModBoxAvailable, ModBoxUpdate };
 
             verticalScrollbar = GetComponentInChildren<ScrollRect>().verticalScrollbar;
             Button[] buttons = GetComponentsInChildren<Button>();
-            buttons[buttons.Length - 4].onClick.AddListener((System.Action)delegate { tab = 0; refreshUI(); });
-            buttons[buttons.Length - 3].onClick.AddListener((System.Action)delegate { tab = 1; refreshUI(); });
-            buttons[buttons.Length - 2].onClick.AddListener((System.Action)delegate { tab = 2; refreshUI(); });
-            buttons[buttons.Length - 1].onClick.AddListener((System.Action)delegate { tab = 3; refreshUI(); });
+            buttons[buttons.Length - 5].onClick.AddListener((System.Action)delegate { tab = 0; refreshUI(); });
+            buttons[buttons.Length - 4].onClick.AddListener((System.Action)delegate { tab = 1; refreshUI(); });
+            buttons[buttons.Length - 3].onClick.AddListener((System.Action)delegate { tab = 2; refreshUI(); });
+            buttons[buttons.Length - 2].onClick.AddListener((System.Action)delegate { tab = 3; refreshUI(); });
+            buttons[buttons.Length - 1].onClick.AddListener((System.Action)delegate { tab = 4; refreshUI(); });
         }
 
+        private List<GameObject> ModBoxAll = new List<GameObject>();
         private List<GameObject> ModBoxInstalled = new List<GameObject>();
         private List<GameObject> ModBoxDisabled = new List<GameObject>();
         private List<GameObject> ModBoxAvailable = new List<GameObject>();
@@ -53,7 +55,6 @@ namespace ModManager
             {
                 foreach (GameObject modBox in tabs[tabIndex])
                 {
-
                     modBox.SetActive(tab == tabIndex);
                     if (modBox.active) modBox.GetComponent<ModBoxScript>().updateUI();
                 }
@@ -71,6 +72,7 @@ namespace ModManager
                 if (comp.name == "ModBox(Clone)")
                     Object.Destroy(comp.gameObject);
 
+            ModBoxAll.Clear();
             ModBoxInstalled.Clear();
             ModBoxDisabled.Clear();
             ModBoxAvailable.Clear();
@@ -86,28 +88,33 @@ namespace ModManager
 
                 if (mod.local)
                 {
-                    if (mod.hasUpdate)
-                    {
-                        modBoxScript.tab = 3;
-                        ModBoxUpdate.Add(modBox);
-                    }
+
                     if (mod.enabled)
                     {
-                        modBoxScript.tab = 0;
+                        modBoxScript.tab = 1;
                         ModBoxInstalled.Add(modBox);
                     }
                     else
                     {
-                        modBoxScript.tab = 1;
+                        modBoxScript.tab = 2;
                         ModBoxDisabled.Add(modBox);
                     }
+
+                    if (mod.hasUpdate)
+                    {
+                        modBoxScript.tab = 4;
+                        ModBoxUpdate.Add(modBox);
+                    }
+
 
                 }
                 else if (mod.online)
                 {
-                    modBoxScript.tab = 2;
+                    modBoxScript.tab = 3;
                     ModBoxAvailable.Add(modBox);
                 }
+
+                ModBoxAll.Add(modBox);
 
                 if (modBoxScript.tab != tab) modBox.SetActive(false);
 

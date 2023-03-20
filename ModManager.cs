@@ -19,6 +19,7 @@ namespace ModManager
             RegisterTypeInIl2Cpp<ModsPnlScript>();
             RegisterTypeInIl2Cpp<ModBoxScript>();
 
+
             Settings.load();
             FileWriter.deleteFiles();
         }

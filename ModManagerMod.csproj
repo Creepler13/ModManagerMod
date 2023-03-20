@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="SpriteManager.cs" />
     <Compile Include="FileWriter.cs" />
     <Compile Include="Patches\Awake_Patch - Copy.cs" />
     <Compile Include="Settings.cs" />
@@ -116,15 +117,17 @@
     <Compile Include="ModManagerTools.cs" />
     <Compile Include="ModManager.cs" />
     <Compile Include="Patches\Awake_Patch.cs" />
-    <Compile Include="ModBoxScript.cs" />
-    <Compile Include="ModsPnlScript.cs" />
+    <Compile Include="Scripts\ModBoxScript.cs" />
+    <Compile Include="Scripts\ModsPnlScript.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="defaultstyle" />
+    <EmbeddedResource Include="images\melon.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="melon.png" />
+    <EmbeddedResource Include="..\AssetBundleProject\MuseDashAssetBundles\Assets\AssetBundles\defaultstyle">
+      <Link>defaultstyle</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 
 namespace ModManager
@@ -23,6 +24,14 @@ namespace ModManager
             //0 = install/update/uninstall  1= disable/enable  2= uninstall
             Text[] texts = GetComponentsInChildren<Text>();
 
+            Dropdown versions = GetComponent<Dropdown>();
+
+            List<string> t = new List<string> { "" };
+
+
+
+            // buttons[2].GetComponent<Image>().sprite=
+
             texts[0].text = modInfo.Name;
             texts[1].text = " by " + modInfo.Author;
             texts[2].text = modInfo.Version != "" ? modInfo.Version : modInfo.onlineVersion;
@@ -31,6 +40,29 @@ namespace ModManager
             switch (tab)
             {
                 case 0:
+                    if (modInfo.enabled)
+                    {
+                        buttons[1].GetComponentInChildren<Text>().text = "Enable";
+                        buttons[1].onClick.AddListener((System.Action)delegate { modInfo.enable(); modsPnl.refresh(); });
+                    }
+                    else
+                    {
+                        buttons[1].GetComponentInChildren<Text>().text = "Disable";
+                        buttons[1].onClick.AddListener((System.Action)delegate { modInfo.disable(); modsPnl.refresh(); });
+                    }
+
+                    if (modInfo.hasUpdate)
+                    {
+                        buttons[0].GetComponentInChildren<Text>().text = "Update to " + modInfo.onlineVersion;
+                        buttons[0].onClick.AddListener((System.Action)delegate { modInfo.update(); modsPnl.refresh(); });
+                    }
+                    else
+                    {
+                        buttons[0].gameObject.SetActive(false);
+                    }
+
+                    break;
+                case 1:
                     if (modInfo.hasUpdate)
                     {
                         buttons[0].GetComponentInChildren<Text>().text = "Update to " + modInfo.onlineVersion;
@@ -47,7 +79,7 @@ namespace ModManager
                     buttons[2].onClick.AddListener((System.Action)delegate { modInfo.delete(); modsPnl.refresh(); });
                     break;
 
-                case 1:
+                case 2:
 
                     if (modInfo.hasUpdate)
                     {
@@ -66,14 +98,14 @@ namespace ModManager
                     buttons[2].onClick.AddListener((System.Action)delegate { modInfo.delete(); modsPnl.refresh(); });
                     break;
 
-                case 2:
+                case 3:
                     buttons[0].gameObject.SetActive(false);
                     buttons[1].gameObject.SetActive(false);
 
                     buttons[2].GetComponentInChildren<Text>().text = "Install";
                     buttons[2].onClick.AddListener((System.Action)delegate { modInfo.download(); modsPnl.refresh(); });
                     break;
-                case 3:
+                case 4:
 
                     buttons[1].GetComponentInChildren<Text>().text = "Update to " + modInfo.onlineVersion;
                     buttons[1].onClick.AddListener((System.Action)delegate { modInfo.update(); modsPnl.refresh(); });
@@ -101,7 +133,7 @@ namespace ModManager
 
             }
 
-            baseRect.sizeDelta=new Vector2 (baseRect.rect.width, maxH);
+            baseRect.sizeDelta = new Vector2(baseRect.rect.width, maxH);
 
         }
 

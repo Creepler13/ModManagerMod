@@ -7,11 +7,11 @@ using ModManager;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ModManager")]
+[assembly: AssemblyTitle(ModManager.ModManager.Name)]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ModManager")]
+[assembly: AssemblyProduct(ModManager.ModManager.Name)]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using ModManager;
 [assembly: AssemblyFileVersion(ModManager.ModManager.Version)]
 [assembly: MelonInfo(typeof(ModManager.ModManager), ModManager.ModManager.Name, ModManager.ModManager.Version, ModManager.ModManager.Author, null)]
 [assembly: MelonGame("PeroPeroGames", "MuseDash")]
-[assembly: MelonColor(System.ConsoleColor.Blue),MelonAuthorColor(System.ConsoleColor.White)]
+[assembly: MelonColor(System.ConsoleColor.Blue), MelonAuthorColor(System.ConsoleColor.White)]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

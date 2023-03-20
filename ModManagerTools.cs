@@ -21,7 +21,7 @@ namespace ModManager
     {
 
         public static List<ModInfo> mods = new List<ModInfo>();
-
+        public static Dictionary<string, Assembly> loaded = new Dictionary<string, Assembly>();
         public static string SelectdStyle = "defaultStyle";
 
         public static void getModLocalInformations()
@@ -35,7 +35,7 @@ namespace ModManager
                 try
                 {
                     if (!file.EndsWith(".dll")) continue;
-                    Assembly ass = Assembly.LoadFrom(file);
+                    Assembly ass = Assembly.LoadFile(file);
                     MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
 
                     ModInfo mod = new ModInfo(info, Path.GetFileName(file));
@@ -57,11 +57,12 @@ namespace ModManager
                     {
                         if (!file.EndsWith(".dll")) continue;
 
-                        Assembly ass = Assembly.LoadFrom(musedashFolder + "/" + file);
-
-
+                        Assembly ass = Assembly.UnsafeLoadFrom(file);
+                        if (loaded.ContainsKey(ass.FullName))
+                            MelonLoader.MelonLogger.Msg((ass == loaded[ass.FullName]) + " " + ass.FullName);
+                        loaded[ass.FullName] = ass;
                         MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
-                        MelonLogger.Msg(info.Name + " " + info.Version + " Disabled");
+                        //MelonLogger.Msg(info.Name + " " + info.Version + " size:" + new FileInfo(file).Length + " Disabled");
                         ModInfo mod = new ModInfo(info, Path.GetFileName(file));
                         mod.enabled = false;
                         mod.local = true;
@@ -128,6 +129,8 @@ namespace ModManager
             modInfo.description = (string)mod["Description"];
             modInfo.hasUpdate = isVersionGreater(modInfo.onlineVersion, modInfo.Version);
             modInfo.downloadLink = "https://raw.githubusercontent.com/MDModsDev/ModLinks/main/" + (string)mod["DownloadLink"];
+
+
         }
         private static void addOnlineMod(JObject mod, ModInfo modInfo)
         {
@@ -137,6 +140,7 @@ namespace ModManager
             modInfo.description = (string)mod["Description"];
             modInfo.onlineVersion = (string)mod["Version"];
             modInfo.downloadLink = "https://raw.githubusercontent.com/MDModsDev/ModLinks/main/" + (string)mod["DownloadLink"];
+
 
             mods.Add(modInfo);
         }
