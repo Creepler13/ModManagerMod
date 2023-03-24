@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.AccessControl;
 using System;
+using System.Reflection;
 
-namespace ModManager
+namespace ModManager.utils
 {
     internal class FileWriter
     {
@@ -95,5 +96,23 @@ namespace ModManager
                 File.Move(ModManager.modsPath + fileName, ModManager.disabledModsPath + fileName);
         }
 
+
+        public static Stream ReadResourceStream(string name)
+        {
+            // Determine path
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourcePath = name;
+            // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
+
+            resourcePath = assembly.GetManifestResourceNames()
+                .Single(str => str.EndsWith(name));
+
+
+            Stream s = assembly.GetManifestResourceStream(resourcePath);
+
+
+            return s;
+
+        }
     }
 }

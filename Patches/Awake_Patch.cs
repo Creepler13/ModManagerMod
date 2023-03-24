@@ -1,18 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
-using Assets.Scripts.UI.Panels;
-using UnityEngine.UI;
-using UnityEngine;
-using ModManager;
-using UnhollowerBaseLib;
-using System.Reflection;
-using System.IO;
-using System.Drawing;
-using Image = UnityEngine.UI.Image;
+﻿using HarmonyLib;
+using ModManager.utils;
 using System;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+using Image = UnityEngine.UI.Image;
 using Object = UnityEngine.Object;
 
 namespace ModManager
@@ -54,12 +46,10 @@ namespace ModManager
             modsPnlScript.ModBoxAsset = ModBoxAsset;
             modsPnlScript.melonSprite = melonSprite;
             modsPnlScript.ModsToggle = ModsToggle;
-
             modsPnlScript.menuButtonImg = menuButtonImg;
+            modsPnlScript.ContentPanel = UnityUtils.getComponentByName(ModsPnl, "Content").gameObject;
 
-            modsPnlScript.ContentPanel = ModManagerTools.getComponentByName(ModsPnl, "Content").gameObject;
-            ModsPnlManager.modsPnl = ModsPnl;
-            ModsPnlManager.modsPnlScript = modsPnlScript;
+            ModManagerTools.modsPnlScript = modsPnlScript;
 
             Modspnlscript = modsPnlScript;
 

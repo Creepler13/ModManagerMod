@@ -3,6 +3,7 @@ using UnityEngine;
 using MelonLoader;
 using System.IO;
 using static UnhollowerRuntimeLib.ClassInjector;
+using ModManager.utils;
 
 namespace ModManager
 {

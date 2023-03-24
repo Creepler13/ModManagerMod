@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ModManager
+namespace ModManager.utils
 {
     internal class SpriteManager
     {
@@ -21,7 +21,7 @@ namespace ModManager
             if (sprites.ContainsKey(name))
                 return sprites[name];
 
-            Bitmap bm = new Bitmap(ModManagerTools.ReadResourceStream(path));
+            Bitmap bm = new Bitmap(FileWriter.ReadResourceStream(path));
 
             Texture2D text = new Texture2D(bm.Width, bm.Height, TextureFormat.ARGB32, false);
 

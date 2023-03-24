@@ -9,12 +9,12 @@ using UnityEngine.Networking;
 using System.Net;
 using System.IO;
 
-namespace ModManager
+namespace ModManager.utils
 {
     internal class Networking
     {
 
-     
+
         public static string Get(string URL)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
@@ -53,9 +53,9 @@ namespace ModManager
         public static void DownloadFile(string URL, string path)
         {
             WebClient we = new WebClient();
-            byte[] bytes= we.DownloadData(URL);
+            byte[] bytes = we.DownloadData(URL);
             FileWriter.writeFile(path, bytes);
-            
+
         }
 
     }

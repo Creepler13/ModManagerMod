@@ -110,15 +110,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="SpriteManager.cs" />
-    <Compile Include="FileWriter.cs" />
-    <Compile Include="Patches\Awake_Patch - Copy.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="Networking.cs" />
-    <Compile Include="ModsPnlManager.cs" />
-    <Compile Include="ModInfo.cs" />
-    <Compile Include="ModManagerTools.cs" />
+    <Compile Include="utils\UnityUtils.cs" />
+    <Compile Include="utils\SpriteManager.cs" />
+    <Compile Include="utils\FileWriter.cs" />
+    <Compile Include="utils\Settings.cs" />
+    <Compile Include="utils\Networking.cs" />
+    <Compile Include="ModManaging\ModInfo.cs" />
+    <Compile Include="ModManaging\ModManagerTools.cs" />
     <Compile Include="ModManager.cs" />
     <Compile Include="Patches\Awake_Patch.cs" />
     <Compile Include="Scripts\ModBoxScript.cs" />

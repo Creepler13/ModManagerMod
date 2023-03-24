@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace ModManager
 {
-    internal class ModsPnlScript : MonoBehaviour
+    public class ModsPnlScript : MonoBehaviour
     {
 
         public Sprite menuButtonImg;

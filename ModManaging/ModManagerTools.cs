@@ -14,12 +14,14 @@ using Il2CppNewtonsoft.Json.Linq;
 using Assets.Scripts.PeroTools.Commons;
 using Il2CppNewtonsoft.Json;
 using System.Collections;
+using ModManager.utils;
 
 namespace ModManager
 {
     public class ModManagerTools
     {
 
+        public static ModsPnlScript modsPnlScript;
         public static List<ModInfo> mods = new List<ModInfo>();
         public static Dictionary<string, Assembly> loaded = new Dictionary<string, Assembly>();
         public static string SelectdStyle = "defaultStyle";
@@ -74,7 +76,9 @@ namespace ModManager
             else
                 Directory.CreateDirectory(ModManager.disabledModsPath);
 
-            ModsPnlManager.RefreshBoxes();
+            modsPnlScript.mods = mods;
+            modsPnlScript.refresh();
+
             getOnlineModInformation();
 
         }
@@ -115,8 +119,8 @@ namespace ModManager
                 }
             }
 
-
-            ModsPnlManager.RefreshBoxes();
+            modsPnlScript.mods = mods;
+            modsPnlScript.refresh();
 
         }
 
@@ -143,46 +147,7 @@ namespace ModManager
             mods.Add(modInfo);
         }
 
-        public static T getComponentByName<T>(GameObject gm, string name)
-        {
-            foreach (T comp in gm.GetComponentsInChildren<T>())
-            {
 
-                if (((string)comp.GetType().GetField("name").GetValue(comp)) == name)
-                    return comp;
-            }
-            return default(T);
-        }
-
-        public static Component getComponentByName(GameObject gm, string name, Type type)
-        {
-            foreach (Component comp in gm.GetComponentsInChildren<Component>())
-            {
-                if (((Component)comp).name == name)
-                    if (comp.GetType() == type)
-                        return comp;
-
-            }
-
-
-
-            return null;
-        }
-
-
-
-
-
-
-        public static Component getComponentByName(GameObject gm, string name)
-        {
-            foreach (Component comp in gm.GetComponentsInChildren<Component>())
-            {
-                if (((Component)comp).name == name)
-                    return comp;
-            }
-            return null;
-        }
 
         public static byte[] ReadResource(string name)
         {
@@ -200,28 +165,7 @@ namespace ModManager
             byte[] bytes = new byte[s.Length];
             s.Read(bytes, 0, bytes.Length);
 
-
-
-
             return bytes;
-
-        }
-
-        public static Stream ReadResourceStream(string name)
-        {
-            // Determine path
-            var assembly = Assembly.GetExecutingAssembly();
-            string resourcePath = name;
-            // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
-
-            resourcePath = assembly.GetManifestResourceNames()
-                .Single(str => str.EndsWith(name));
-
-
-            Stream s = assembly.GetManifestResourceStream(resourcePath);
-
-
-            return s;
 
         }
 
