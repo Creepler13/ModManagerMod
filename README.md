@@ -11,3 +11,5 @@ Version 1.0.0
      
      
 This has only been tested on my own PC so if there are any bugs please report them on the MDMC discord or directly as an Issue on github
+
+![grafik](https://user-images.githubusercontent.com/29956950/227640456-d2207336-d991-4571-9c17-ad065670dcde.png)
