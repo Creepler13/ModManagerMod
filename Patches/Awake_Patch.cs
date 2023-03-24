@@ -25,6 +25,9 @@ namespace ModManager
         private static void Prefix(MenuSelect __instance)
         {
 
+            GameObject btnHowToPlay = __instance.m_ActivePnls[0].transform.GetChild(0).transform.GetChild(0).gameObject;
+            Sprite menuButtonImg = btnHowToPlay.GetComponent<Image>().sprite;
+
             Vector3 parPos = __instance.m_PcOptions[0].transform.parent.position;
             parPos.x = parPos.x - 2.5f;
             __instance.m_PcOptions[0].transform.parent.position = parPos;
@@ -33,15 +36,12 @@ namespace ModManager
             Transform lastChild = __instance.m_PcOptions[0].transform.parent.GetChild(__instance.m_PcOptions[0].transform.parent.childCount - 1);
             Toggle ModsToggle = Object.Instantiate<Toggle>(__instance.m_PcOptions[__instance.m_PcOptions.Length - 1], __instance.m_PcOptions[0].transform.parent.transform);
 
-
             Sprite melonSprite = SpriteManager.load("melon.png");
 
             var bundleLoadRequest = AssetBundle.LoadFromMemory(ModManagerTools.ReadResource("ModManager.defaultstyle"));
 
             GameObject ModPnlAsset = bundleLoadRequest.LoadAsset("assets/ModsPnl.prefab").Cast<GameObject>();
             GameObject ModBoxAsset = bundleLoadRequest.LoadAsset("assets/ModBox.prefab").Cast<GameObject>();
-
-
 
             lastChild.SetAsLastSibling();// move array with "d" to the end;
 
@@ -54,6 +54,9 @@ namespace ModManager
             modsPnlScript.ModBoxAsset = ModBoxAsset;
             modsPnlScript.melonSprite = melonSprite;
             modsPnlScript.ModsToggle = ModsToggle;
+
+            modsPnlScript.menuButtonImg = menuButtonImg;
+
             modsPnlScript.ContentPanel = ModManagerTools.getComponentByName(ModsPnl, "Content").gameObject;
             ModsPnlManager.modsPnl = ModsPnl;
             ModsPnlManager.modsPnlScript = modsPnlScript;
@@ -66,10 +69,6 @@ namespace ModManager
             __instance.m_ActivePnls = temp.AddToArray(ModsPnl);
             Toggle[] temp2 = __instance.m_PcOptions.ToArray<Toggle>();
             __instance.m_PcOptions = temp2.AddToArray(ModsToggle);
-
-
-
-
 
         }
 

@@ -8,7 +8,7 @@ using ModManager;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle(ModManager.ModManager.Name)]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription(ModManager.ModManager.Description)]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct(ModManager.ModManager.Name)]

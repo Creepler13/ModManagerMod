@@ -57,6 +57,7 @@ namespace ModManager
         {
             Networking.DownloadFile(downloadLink, ((enabled) ? ModManager.modsPath : ModManager.disabledModsPath) + fileName);
             MelonLogger.Msg("Updated " + Name + " " + Version + " -> " + onlineVersion);
+            ModManagerTools.temp_ModUpdatedthisInstance.Add(Name);
         }
 
         public void delete()

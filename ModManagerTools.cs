@@ -57,9 +57,7 @@ namespace ModManager
                     {
                         if (!file.EndsWith(".dll")) continue;
 
-                        Assembly ass = Assembly.UnsafeLoadFrom(file);
-                        if (loaded.ContainsKey(ass.FullName))
-                            MelonLoader.MelonLogger.Msg((ass == loaded[ass.FullName]) + " " + ass.FullName);
+                        Assembly ass = Assembly.LoadFrom(file);
                         loaded[ass.FullName] = ass;
                         MelonInfoAttribute info = ass.GetCustomAttribute<MelonInfoAttribute>();
                         //MelonLogger.Msg(info.Name + " " + info.Version + " size:" + new FileInfo(file).Length + " Disabled");
@@ -122,15 +120,15 @@ namespace ModManager
 
         }
 
+        public static List<string> temp_ModUpdatedthisInstance = new List<string>();
+
         private static void addOnlineModToLocalMod(JObject mod, ModInfo modInfo)
         {
             modInfo.online = true;
             modInfo.onlineVersion = (string)mod["Version"];
             modInfo.description = (string)mod["Description"];
-            modInfo.hasUpdate = isVersionGreater(modInfo.onlineVersion, modInfo.Version);
+            modInfo.hasUpdate = temp_ModUpdatedthisInstance.Contains(modInfo.Name) ? false : isVersionGreater(modInfo.onlineVersion, modInfo.Version); //TODO fix update
             modInfo.downloadLink = "https://raw.githubusercontent.com/MDModsDev/ModLinks/main/" + (string)mod["DownloadLink"];
-
-
         }
         private static void addOnlineMod(JObject mod, ModInfo modInfo)
         {

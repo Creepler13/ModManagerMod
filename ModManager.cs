@@ -30,7 +30,7 @@ namespace ModManager
         }
 
         public const string Name = "ModManager";
-        public const string Description = "ModManager";
+        public const string Description = "A Simple ModManager inside your Settings";
         public const string Version = "1.0.0";
         public const string Author = "Creepler13";
 

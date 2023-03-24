@@ -9,7 +9,8 @@ namespace ModManager
 {
     internal class ModsPnlScript : MonoBehaviour
     {
-        // Start is called before the first frame update
+
+        public Sprite menuButtonImg;
 
         public List<ModInfo> mods = new List<ModInfo>();
         public GameObject ModBoxAsset;
@@ -23,27 +24,31 @@ namespace ModManager
         {
             Awake_Patch.Modspnlscript.ModsToggle.transform.GetChild(0).FindChild("TxtAchv").gameObject.GetComponent<Text>().text = "Mods";
 
-
-
-
-            tabs = new List<GameObject>[] { ModBoxAll, ModBoxInstalled, ModBoxDisabled, ModBoxAvailable, ModBoxUpdate };
+            tabs = new List<GameObject>[] { ModBoxInstalled, ModBoxDisabled, ModBoxAvailable, ModBoxUpdate };
 
             verticalScrollbar = GetComponentInChildren<ScrollRect>().verticalScrollbar;
-            Button[] buttons = GetComponentsInChildren<Button>();
-            buttons[buttons.Length - 5].onClick.AddListener((System.Action)delegate { tab = 0; refreshUI(); });
-            buttons[buttons.Length - 4].onClick.AddListener((System.Action)delegate { tab = 1; refreshUI(); });
-            buttons[buttons.Length - 3].onClick.AddListener((System.Action)delegate { tab = 2; refreshUI(); });
-            buttons[buttons.Length - 2].onClick.AddListener((System.Action)delegate { tab = 3; refreshUI(); });
-            buttons[buttons.Length - 1].onClick.AddListener((System.Action)delegate { tab = 4; refreshUI(); });
+            buttons = GetComponentsInChildren<Button>();
+
+            for (int i = 0; i < tabs.Length; i++)
+            {
+                int tempI = i;
+                buttons[i].onClick.AddListener((System.Action)delegate { tab = tempI; refreshUI(); });
+                buttons[i].image.sprite = menuButtonImg;
+            }
+
+            refreshUI();
         }
 
-        private List<GameObject> ModBoxAll = new List<GameObject>();
+        Button[] buttons;
+
         private List<GameObject> ModBoxInstalled = new List<GameObject>();
         private List<GameObject> ModBoxDisabled = new List<GameObject>();
         private List<GameObject> ModBoxAvailable = new List<GameObject>();
         private List<GameObject> ModBoxUpdate = new List<GameObject>();
 
         public List<GameObject>[] tabs = new List<GameObject>[0];
+
+        public List<GameObject> selects = new List<GameObject>();
 
         public int tab = 0;
 
@@ -56,14 +61,11 @@ namespace ModManager
                 foreach (GameObject modBox in tabs[tabIndex])
                 {
                     modBox.SetActive(tab == tabIndex);
-                    if (modBox.active) modBox.GetComponent<ModBoxScript>().updateUI();
                 }
+
+                buttons[tabIndex].transform.GetChild(0).GetComponent<Text>().fontStyle = tab == tabIndex ? FontStyle.Bold : FontStyle.Normal;
             }
-
-
             verticalScrollbar.value = 1;
-
-
         }
 
         public void refresh()
@@ -72,7 +74,7 @@ namespace ModManager
                 if (comp.name == "ModBox(Clone)")
                     Object.Destroy(comp.gameObject);
 
-            ModBoxAll.Clear();
+
             ModBoxInstalled.Clear();
             ModBoxDisabled.Clear();
             ModBoxAvailable.Clear();
@@ -88,45 +90,18 @@ namespace ModManager
 
                 if (mod.local)
                 {
-
                     if (mod.enabled)
-                    {
-                        modBoxScript.tab = 1;
                         ModBoxInstalled.Add(modBox);
-                    }
                     else
-                    {
-                        modBoxScript.tab = 2;
                         ModBoxDisabled.Add(modBox);
-                    }
-
                     if (mod.hasUpdate)
-                    {
-                        modBoxScript.tab = 4;
                         ModBoxUpdate.Add(modBox);
-                    }
-
-
                 }
                 else if (mod.online)
-                {
-                    modBoxScript.tab = 3;
                     ModBoxAvailable.Add(modBox);
-                }
-
-                ModBoxAll.Add(modBox);
-
-                if (modBoxScript.tab != tab) modBox.SetActive(false);
-
             }
 
             refreshUI();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
 
         public ModsPnlScript(System.IntPtr intPtr) : base(intPtr)
